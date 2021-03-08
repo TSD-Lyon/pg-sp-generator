@@ -1,6 +1,6 @@
 /**
 * (c) 2008 Technology Lab,
-* Stored Procedure Generator 0.2
+* Stored Procedure Generator 0.3
 *
 * Features:
 *	will generate stored procedure wrappers around a given <schema>.<table> pair to perform: inserts, retrieves, updates opertions.
@@ -29,6 +29,7 @@
 * Contributors:
 *	Steve L. Nyemba, nyemba@gmail.com
 *	Gregg Boyle, greggboyle@gmail.com
+*       Marc Faussurier, faussureir.marc@icloud.com
 */
 
 CREATE OR REPLACE FUNCTION utils.getFieldNames(p_schemaName varchar, p_tableName varchar) returns REFCURSOR AS $$
@@ -47,7 +48,7 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL ;
 
-CREATE OR REPLACE FUNCTION utils.generateUpdateStoredProcedure(p_schemaName VARCHAR, p_tableName VARCHAR) RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION utils.generateSaveStoredProcedure(p_schemaName VARCHAR, p_tableName VARCHAR) RETURNS VOID AS $$
 DECLARE
 	oRecord		RECORD;
 	oTableDef	REFCURSOR;
@@ -62,7 +63,7 @@ DECLARE
 BEGIN
     oPrimaryKeyName := utils.getPrimaryKeyName(p_schemaName,p_tableName) ;
 	-- Creating an update stored procedure for a given <p_schemaName>.<p_tableName>
-	oFunctionBody 	:= 'CREATE OR REPLACE FUNCTION ' ||p_schemaName||'.upd_'||p_tableName ||'(' ;
+	oFunctionBody 	:= 'CREATE OR REPLACE FUNCTION ' ||p_schemaName||'.usp_save_'||p_tableName ||'(User bigint, ' ;
 	oSQLCommand 	:= 'UPDATE '||p_schemaName ||'.'||p_tableName || ' SET ';
 	OPEN oTableDef FOR SELECT  utils.getFieldNames(p_schemaName,p_tableName);
 	FETCH oTableDef INTO oTableDef;
@@ -141,7 +142,7 @@ DECLARE
 	oPrimaryKeyName     VARCHAR;
 BEGIN
     oPrimaryKeyName := utils.getPrimaryKeyName(p_schemaName,p_tableName) ;
-	oFunctionBody := 'CREATE OR REPLACE FUNCTION ' || p_schemaName || '.ins_' || p_tableName || '(';
+	oFunctionBody := 'CREATE OR REPLACE FUNCTION ' || p_schemaName || '.usp_insert_' || p_tableName || '(User bigint,';
 	oSQLCommand :='INSERT INTO ' || p_schemaName || '.' || p_tableName || '(';
 	OPEN oTableDef FOR SELECT utils.getFieldNames(p_schemaName,p_tableName);
 	FETCH oTableDef INTO oTableDef; 
@@ -203,14 +204,14 @@ LOOP
 	EXECUTE ''|| oFunctionBody || '';
 END;
 $$ LANGUAGE PLPGSQL ;
-CREATE OR REPLACE FUNCTION utils.generateGetStoredProcedure(p_schemaName VARCHAR,p_tableName VARCHAR) RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION utils.generateReadAllStoredProcedure(p_schemaName VARCHAR,p_tableName VARCHAR) RETURNS VOID AS $$
 DECLARE
 	oFunctionBody 	VARCHAR;
 	oSQLQuery	VARCHAR;
 BEGIN
-	oFunctionBody 	:= 'CREATE OR REPLACE FUNCTION '||p_schemaName||'.get_' ||p_tableName||'() RETURNS REFCURSOR AS '||CHR(36)||CHR(36) ;
+	oFunctionBody 	:= 'CREATE OR REPLACE FUNCTION '||p_schemaName||'.get_' ||p_tableName||'(User bigint) RETURNS REFCURSOR AS '||CHR(36)||CHR(36) ;
 	oFunctionBody	:= oFunctionBody || ' DECLARE oCursor REFCURSOR; BEGIN ' ;
-	oSQLQuery	    := ' OPEN oCursor FOR SELECT * FROM '||p_schemaName||'.'||p_tableName ||';' ;
+	oSQLQuery	    := ' OPEN oCursor FOR SELECT * FROM '||p_schemaName||'.usp_read_all_'||p_tableName ||' where deleted = 0;' ;
 	oFunctionBody 	:= oFunctionBody || oSQLQuery || ' RETURN oCursor; ';
 	oFunctionBody	:= oFunctionBody ||' END; '||CHR(36) ||CHR(36)||' LANGUAGE PLPGSQL; ';
 	--INSERT INTO gquery(query) VALUES(oFunctionBody) ;
@@ -219,16 +220,16 @@ BEGIN
 END;
 $$LANGUAGE  PLPGSQL;
 
-CREATE OR REPLACE FUNCTION utils.generateGetByAgnStoredProcedure(p_schemaName VARCHAR,p_tableName VARCHAR) RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION utils.generateReadStoredProcedure(p_schemaName VARCHAR,p_tableName VARCHAR) RETURNS VOID AS $$
 DECLARE
 	oFunctionBody 	    VARCHAR ;
 	oSQLQuery	        VARCHAR;
 	oPrimaryKeyName     VARCHAR;
 BEGIN
     oPrimaryKeyName := utils.getPrimaryKeyName(p_schemaName,p_tableName) ;
-	oFunctionBody 	:= 'CREATE OR REPLACE FUNCTION '||p_schemaName||'.get_' ||p_tableName||'(p_Agn VARCHAR) RETURNS REFCURSOR AS '||CHR(36)||CHR(36) ;
+	oFunctionBody 	:= 'CREATE OR REPLACE FUNCTION '||p_schemaName||'.usp_read_' ||p_tableName||'(User bigint, RowID VARCHAR) RETURNS REFCURSOR AS '||CHR(36)||CHR(36) ;
 	oFunctionBody	:= oFunctionBody || ' DECLARE oCursor REFCURSOR; BEGIN ' ;
-	oSQLQuery	    := ' OPEN oCursor FOR SELECT * FROM '||p_schemaName||'.'||p_tableName ||' WHERE '||oPrimaryKeyName||' = p_Agn; ' ;
+	oSQLQuery	    := ' OPEN oCursor FOR SELECT * FROM '||p_schemaName||'.'||p_tableName ||' WHERE '||oPrimaryKeyName||' = RowID and deleted = 0; ' ;
 	oFunctionBody 	:= oFunctionBody || oSQLQuery || ' RETURN oCursor; ';
 	oFunctionBody	:= oFunctionBody ||' END; '||CHR(36) ||CHR(36)||' LANGUAGE PLPGSQL; ';
 	--INSERT INTO gquery(query) VALUES(oFunctionBody) ;
@@ -260,7 +261,11 @@ BEGIN
 --		FETCH oFieldNames INTO oFieldNames ;
 		-- Creating an insert stored procedure
 		PERFORM utils.generateInsertStoredProcedure(p_schemaName,p_tableName) ;
-		PERFORM utils.generateGetByAgnStoredProcedure(p_schemaName,p_tableName);
+		PERFORM utils.generate
+		
+		
+		
+		ByAgnStoredProcedure(p_schemaName,p_tableName);
 		PERFORM utils.generateUpdateStoredProcedure(p_schemaName,p_tableName);
 		PERFORM utils.generateGetStoredProcedure(p_schemaName,p_tableName);
 --		CLOSE oFieldNames ;
@@ -268,7 +273,7 @@ BEGIN
 END;
 
 
-$$ LANGUAGE PLPGSQL ;
+$$ LANGUAGE PLPGSQL ;Ge
 
 CREATE OR REPLACE FUNCTION utils.getPrimaryKeyName(p_schemaName varchar, p_tableName varchar) returns varchar as $$
 DECLARE
