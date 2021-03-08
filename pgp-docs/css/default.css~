@@ -1,0 +1,28 @@
+.default{
+
+	font-family:arial;
+	font-size:10px;
+}
+
+.page-header{
+
+	font-family:arial;
+	font-size:14px;
+	font-weight:bold;
+}
+
+.grid-cell{
+	border-bottom-width:1px;
+	border-bottom-style:solid;
+	
+	border-right-width:1px;
+	border-right-style:solid;
+
+	font-family:arial;
+	font-size:10px;
+	
+}
+
+div.raised{
+	z-index:1;
+}

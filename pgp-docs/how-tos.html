@@ -1,0 +1,26 @@
+<div  align="right" style="background:gray">
+	<font color="white">            
+		<b>PgP How-to ... </b>
+	</font>
+</div>
+Here is a simple guide to how to use the Pgp.
+<br>
+
+Assuming the database has been created and the tables have been
+created and all the tables have a primary key (Sine-qua nun condition)
+<ul>
+	<b>Installing the script</b>
+	<li> Open the database through command line or your favorite GUI tools
+	<li> Download the Pgp Script <a href="http://code.google.com/p/pgp-generator"/> here</a>
+	<li> Create a schema called utils. <a href="http://www.postgresql.org/docs/8.1/static/sql-createschema.html">Here</a>
+	is help on how to create a schema.
+	<li> Run the script downloaded:
+		<ul>
+			<li>If you are using psql then use the \i option as shown <a href="http://www.postgresql.org/docs/7.4/static/app-psql.html">here</a>
+			<li>If you are using a GUI client then open the file and run it.
+		</ul>
+	<br><b>Creating Stored Procedures for public.foo</b>
+	<li> When the script has run the utility is already installed and ready to go:
+		<li> Suppose your table (foo) was created in the default schema run the following command select utils.generatestoredprocedures('public','foo') ;
+</ul>
+

@@ -1,0 +1,36 @@
+<div  align="right" style="background:gray">
+	<font color="white">
+		<b>PgP Online Generator 0.1 </b> 
+	</font>
+</div>
+This utility allows you to generate a script custom to your database and
+environment allowing you to skip a few steps in the installation process.
+
+<table border="0">
+	<tr class="default">
+		<td align="right">
+			Utility Owner
+		</td>
+		<td>
+			<input type="text" class="default" id="owner"/>
+		</td>
+	</tr>
+	<tr class="default">
+		<td align="right"> 
+			Target Schema
+		</td>
+		<td>
+			<input type="text" class="default" id="schema"/>
+			<input type="button" class="default" value="generate"
+			onclick="pgp.utils.init()"/>
+		</td>
+	</tr>
+</table>
+	
+<div id="pgp.panel">
+	<div id="pgp.status" class="default"> &nbsp;</div>
+	<code>
+	<div id="pgp.out" style="border-top-style:solid;
+	border-top-width:1px; height:250; overflow:auto"></div>		
+	</code>
+</div>

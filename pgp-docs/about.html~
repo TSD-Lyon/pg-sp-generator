@@ -1,0 +1,44 @@
+<div  align="right" style="background:gray">
+        <font color="white">
+		<b>About PgP Generator</b>
+	</font>
+</div>
+<table width="100%">
+<tr class="default">
+<td>
+	<div>
+		<b>What is Pgp ?</b><br>
+		PgP is a utility written in Pg/SQL that generates stored procedures around tables. The
+		stored procedures perform the following operations:
+	<ul>
+		<li>Insert
+		<li>Update given the primary key
+		<li>Retrieve: all records and by the table's primary key
+	</ul>
+	<b>Why use Pgp ?</b><br>
+	<ul>
+		<li>Written in Pg/SQL it will run anywhere <a href="http://postgresql.org">PostgreSQL</a> runs
+		<li>Save time writing basic CRUD operations
+		<li>Be more productive and focus on implementing business
+		logic & security for the database
+		<li>Compared to other products this script is light-weight
+		and free
+		
+	</ul>
+	The current version is optimized and has been tested with PostgreSQL 7.x and
+	8.3 and is working well. 
+	</div>
+	<div><br>
+		<b>Where is the source code ?</b><br> 
+		The project is hosted on <a href="http://code.google.com/p/pgp-generator">google</a>
+	for download. <b>PgP-Generator</b> is developed under <a
+		href="http://gplv3.fsf.org/">GPL v3</a> and
+		comes with NO WARRANTY or implied warranty. Feel free to
+	change; and distribute at will (giving proper credit) 
+	</div>
+	<div>
+	</div>
+
+</td>
+</tr>
+</table>

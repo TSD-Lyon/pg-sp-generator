@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<config>
+	<domain id="site.menu">
+		<entry id="about" 	value="pgp.jspx.read('about.html')"/>
+		<entry id="what's new" 	value="pgp.jspx.read('readme.html')"/>
+		<entry id="how-tos" 	value="pgp.jspx.read('how-tos.html')"/>
+		<entry id="archive" 	value="pgp.jspx.read('archive.html')"/>
+		<entry id="generator"	value="pgp.jspx.read('generator.html')"/>
+		<entry id="blog"	value="pgp.jspx.read('blog.html')"/>
+	</domain>
+	
+</config>
