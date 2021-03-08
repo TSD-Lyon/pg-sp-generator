@@ -25,6 +25,7 @@
 *	1. Provide Security to avoid SQL injection for varchar|Text|char(x) fields using regex
 *	2. Refine getters i.e getter by unique; foreign keys (not just primary keys)
 *	3. Provide support for delete operations
+*       4. logs & deleted & app-user-permissions
 *
 * Contributors:
 *	Steve L. Nyemba, nyemba@gmail.com
